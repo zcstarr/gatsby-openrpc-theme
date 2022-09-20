@@ -24,12 +24,12 @@ aliases:
 
 defaults: &defaults
   working_directory: ~/project
+  docker:
+    - image: circleci/node:14.17.5
 
 jobs:
   test:
     <<: *defaults
-    docker:
-      - image: circleci/node:14.17.5
     steps:
       - checkout
       - restore_cache: *restore-deps-cache
@@ -41,15 +41,8 @@ jobs:
 
   release:
     <<: *defaults
-    docker:
-      - image: circleci/rust:1.40-stretch
     steps:
       - checkout
-      - run:
-          name: "Update Node.js and npm"
-          command: |
-            curl -sSL "https://nodejs.org/dist/v12.16.1/node-v14.17.5-linux-x64.tar.xz" | sudo tar --strip-components=2 -xJ -C /usr/local/bin/ node-v14.17.5-linux-x64/bin/node
-            curl https://www.npmjs.com/install.sh | sudo bash
       - restore_cache: *restore-deps-cache
       - run: npm install
       - run: npm install semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/npm @semantic-release/commit-analyzer @semantic-release/release-notes-generator
