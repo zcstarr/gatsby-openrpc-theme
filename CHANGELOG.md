@@ -1,3 +1,12 @@
+## [1.2.1](https://github.com/xops/gatsby-openrpc-theme/compare/1.2.0...1.2.1) (2022-09-20)
+
+
+### Bug Fixes
+
+* bump node version in circleci ([2419f2a](https://github.com/xops/gatsby-openrpc-theme/commit/2419f2a8f2b21a487c651fee8f096ffe615a2394))
+* node docker container no more rust ([687c881](https://github.com/xops/gatsby-openrpc-theme/commit/687c8816f7d2ac4bcdc4096e20bf3210f40be975))
+* update gatsby-sharp plugin ([3038542](https://github.com/xops/gatsby-openrpc-theme/commit/30385428d3bd94ce38c01b8902f8e186b24d163a))
+
 # [1.2.0](https://github.com/xops/gatsby-openrpc-theme/compare/1.1.8...1.2.0) (2020-08-27)
 
 
