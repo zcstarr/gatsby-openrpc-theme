@@ -1,29 +1,42 @@
-import React from "react";
-import { Link, Grid, Typography, useMediaQuery, Theme } from "@material-ui/core";
-import { Link as GatsbyLink } from "gatsby";
-import { useTheme } from "@material-ui/styles";
+import React from 'react';
+import { Box, Container, Typography, Link, useTheme } from '@mui/material';
 
-interface IFooterLink {
-  name: string;
-  link: string;
+export interface FooterProps {
+  footerLinks?: Array<{
+    name: string;
+    link: string;
+  }>;
 }
 
-interface IProps {
-  footerLinks: IFooterLink[];
-}
-
-const Footer: React.FC<IProps> = (props) => {
-  const theme: Theme = useTheme();
-  const smallQuery = useMediaQuery(theme.breakpoints.up("sm"));
+const Footer = ({ footerLinks }: FooterProps) => {
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
 
   return (
-    <Grid container spacing={10} style={{marginTop: "10px", marginBottom: "10px", padding: smallQuery ? "" : "30px"}} direction={smallQuery ? "row" : "column"}>
-      {props.footerLinks.map((footerLink) => {
-        return (
-          <Link href={footerLink.link} style={{paddingRight: "15px", fontSize: "16px"}} color="textSecondary">{footerLink.name}</Link>
-        );
-      })}
-    </Grid>
+    <Box 
+      component="footer" 
+      sx={{ 
+        py: 3, 
+        px: 2, 
+        mt: 'auto', 
+        backgroundColor: isDarkMode ? theme.palette.grey[900] : theme.palette.grey[200]
+      }}
+    >
+      <Container maxWidth="sm">
+        <Typography variant="body2" color="text.secondary" align="center">
+          © {new Date().getFullYear()}{' '}
+          <Link color="inherit" href="https://open-rpc.org/">
+            OpenRPC
+          </Link>
+        </Typography>
+        <Typography variant="body2" color="text.secondary" align="center">
+          Documentation built with{' '}
+          <Link color="inherit" href="https://www.gatsbyjs.com/">
+            Gatsby
+          </Link>
+        </Typography>
+      </Container>
+    </Box>
   );
 };
 
