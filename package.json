@@ -1,5 +1,5 @@
 {
-  "name": "gatsby-openrpc-theme",
+  "name": "open-rpc/gatsby-openrpc-theme",
   "description": "A gatsby theme for generated OpenRPC documentation",
   "version": "0.0.0-development",
   "publishConfig": {
