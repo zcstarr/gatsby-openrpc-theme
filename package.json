@@ -75,9 +75,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xops/gatsby-openrpc-theme"
+    "url": "https://github.com/zcstarr/gatsby-openrpc-theme"
   },
   "bugs": {
-    "url": "https://github.com/xops/gatsby-openrpc-theme/issues"
+    "url": "https://github.com/zcstarr/gatsby-openrpc-theme/issues"
   }
 }
