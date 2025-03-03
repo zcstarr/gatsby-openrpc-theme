@@ -33,8 +33,8 @@ const Image = ({ src, alt, className }: ImageProps) => {
     }
   `);
 
-  const image = data.allImageSharp.nodes.find(
-    (node: { original: { src: string } }) => node.original.src.includes(src)
+  const image = data.allImageSharp.nodes.find((node: { original: { src: string } }) =>
+    node.original.src.includes(src)
   );
 
   if (!image) {
@@ -42,7 +42,7 @@ const Image = ({ src, alt, className }: ImageProps) => {
   }
 
   const gatsbyImage = getImage(image) as IGatsbyImageData;
-  
+
   return <GatsbyImage image={gatsbyImage} alt={alt} className={className} />;
 };
 

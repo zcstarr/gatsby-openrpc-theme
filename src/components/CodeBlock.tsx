@@ -12,18 +12,18 @@ export interface CodeBlockProps {
 const CodeBlock = ({ children, className, darkMode }: CodeBlockProps) => {
   const theme = useTheme();
   const language = className ? className.replace(/language-/, '') : 'javascript';
-  
+
   // Use component's darkMode prop or theme's mode
   const isDarkMode = darkMode !== undefined ? darkMode : theme.palette.mode === 'dark';
   const syntaxTheme = isDarkMode ? vscDarkPlus : vs;
 
   return (
-    <Paper 
-      elevation={2} 
-      sx={{ 
-        mb: 2, 
+    <Paper
+      elevation={2}
+      sx={{
+        mb: 2,
         overflow: 'hidden',
-        bgcolor: isDarkMode ? 'grey.900' : 'grey.50'
+        bgcolor: isDarkMode ? 'grey.900' : 'grey.50',
       }}
     >
       <SyntaxHighlighter

@@ -1,38 +1,37 @@
-import React from "react"
-import { graphql, Link } from "gatsby"
-import { Typography, Box, Paper, Button, Grid, Card, CardContent, CardActions } from "@mui/material"
-import Layout from "../components/layout"
+import React from 'react';
+import { graphql, Link } from 'gatsby';
+import { Typography, Box, Button, Grid, Card, CardContent, CardActions } from '@mui/material';
 
 interface IndexPageProps {
   data: {
     site: {
       siteMetadata: {
-        title: string
-        description: string
-      }
-    }
+        title: string;
+        description: string;
+      };
+    };
     allMdx: {
       edges: Array<{
         node: {
-          id: string
+          id: string;
           fields: {
-            slug: string
-          }
+            slug: string;
+          };
           frontmatter: {
-            title: string
-          }
-        }
-      }>
-    }
-  }
+            title: string;
+          };
+        };
+      }>;
+    };
+  };
 }
 
 const IndexPage = ({ data }: IndexPageProps) => {
-  const { title, description } = data.site.siteMetadata
-  const posts = data.allMdx.edges
+  const { title, description } = data.site.siteMetadata;
+  const posts = data.allMdx.edges;
 
   return (
-    <Layout>
+    <>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h1" component="h1" gutterBottom>
           {title}
@@ -40,13 +39,7 @@ const IndexPage = ({ data }: IndexPageProps) => {
         <Typography variant="h5" component="p" color="textSecondary" paragraph>
           {description}
         </Typography>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          component={Link} 
-          to="/sample/"
-          sx={{ mt: 2 }}
-        >
+        <Button variant="contained" color="primary" component={Link} to="/sample/" sx={{ mt: 2 }}>
           View Sample Page
         </Button>
       </Box>
@@ -66,11 +59,7 @@ const IndexPage = ({ data }: IndexPageProps) => {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button 
-                      size="small" 
-                      component={Link} 
-                      to={node.fields.slug}
-                    >
+                    <Button size="small" component={Link} to={node.fields.slug}>
                       Read More
                     </Button>
                   </CardActions>
@@ -80,9 +69,9 @@ const IndexPage = ({ data }: IndexPageProps) => {
           </Grid>
         </Box>
       )}
-    </Layout>
-  )
-}
+    </>
+  );
+};
 
 export const query = graphql`
   query {
@@ -106,6 +95,6 @@ export const query = graphql`
       }
     }
   }
-`
+`;
 
-export default IndexPage 
+export default IndexPage;

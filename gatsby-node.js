@@ -79,24 +79,22 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   // Update GraphQL query syntax for Gatsby v5
   const result = await graphql(`
-    query {
-      site {
-        siteMetadata {
-          title
-          menuLinks {
-            name
-            link
-            ignoreNextPrev
-          }
-        }
-      }
+    {
       allMdx {
         edges {
           node {
             id
+            fields {
+              slug
+            }
+            frontmatter {
+            title
+            }
             internal {
               contentFilePath
             }
+          }
+          next {
             fields {
               slug
             }
@@ -104,12 +102,20 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
               title
             }
           }
+          previous {
+              fields {
+                slug
+              }
+              frontmatter {
+                title
+              }
+            }
+          }
         }
       }
-    }
   `);
 
-  if (result.errors) {
+      if (result.errors) {
     reporter.panicOnBuild('Error loading MDX result', result.errors);
     return;
   }
@@ -118,34 +124,36 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   const allPages = result.data?.allMdx?.edges || [];
   const links = result.data?.site?.siteMetadata?.menuLinks || [];
   
-  allPages.forEach(({ node }) => {
-    const slug = _.get(node, `fields.slug`);
-    if (!slug) return;
+  allPages.forEach(({ node, next, previous }) => {
+        const slug = _.get(node, `fields.slug`);
+        if (!slug) return;
     
     const docIndex = links.findIndex(findDoc, { link: slug });
-    let nextAndPrev = {}
+        let nextAndPrev = {}
     
-    if (docIndex > -1) {
-      nextAndPrev.prev = links[docIndex - 1] || null;
-      nextAndPrev.next = links[docIndex + 1] || null;
-    }
+        if (docIndex > -1) {
+          nextAndPrev.prev = links[docIndex - 1] || null;
+          nextAndPrev.next = links[docIndex + 1] || null;
+        }
     
-    if (nextAndPrev.prev && nextAndPrev.prev.ignoreNextPrev) {
-      delete nextAndPrev.prev;
-    }
-    if (nextAndPrev.next && nextAndPrev.next.ignoreNextPrev) {
-      delete nextAndPrev.next;
-    }
+        if (nextAndPrev.prev && nextAndPrev.prev.ignoreNextPrev) {
+          delete nextAndPrev.prev;
+        }
+        if (nextAndPrev.next && nextAndPrev.next.ignoreNextPrev) {
+          delete nextAndPrev.next;
+        }
     
-    createPage({
+        createPage({
       path: `${node.fields.slug}`,
-      component: slash(defaultTemplate),
-      context: {
-        slug: node.fields.slug,
-        ...nextAndPrev,
-      },
-    });
-  });
+          component: slash(defaultTemplate),
+          context: {
+        id: node.id,
+            slug: node.fields.slug,
+        next: next,
+        prev: previous,
+          },
+        });
+      });
 };
 
 // Create slugs for files
