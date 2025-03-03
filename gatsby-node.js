@@ -5,8 +5,50 @@
  */
 const path = require("path");
 const _ = require("lodash");
-const slash = require(`slash`)
-const defaultTemplate = path.resolve(__dirname, "src/templates/default.tsx");
+
+// Add schema customization to ensure fields and frontmatter exist
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions;
+  const typeDefs = `
+    type SiteSiteMetadata {
+      title: String
+      description: String
+      author: String
+      logoUrl: String
+      primaryColor: String
+      primaryColorDark: String
+      secondaryColor: String
+      secondaryColorDark: String
+      menuLinks: [MenuLink]
+      footerLinks: [FooterLink]
+    }
+    
+    type MenuLink {
+      name: String
+      link: String
+      ignoreNextPrev: Boolean
+    }
+    
+    type FooterLink {
+      name: String
+      link: String
+    }
+    
+    type Mdx implements Node {
+      frontmatter: MdxFrontmatter
+      fields: MdxFields
+    }
+    
+    type MdxFrontmatter {
+      title: String
+    }
+    
+    type MdxFields {
+      slug: String
+    }
+  `;
+  createTypes(typeDefs);
+};
 
 function findDoc(doc) {
   if (!doc.link) return null
@@ -24,37 +66,43 @@ function getSibling(index, list, direction) {
     const prev = index === 0 ? null : list[index - 1]
     return prev
   } else {
-    reporter.warn(
-      `Did not provide direction to sibling function for building next and prev links`
-    )
     return null
   }
 }
 
-exports.createPages = ({ graphql, actions, reporter }) => {
-  const { createPage, createRedirect } = actions
+exports.createPages = async ({ graphql, actions, reporter }) => {
+  const { createPage } = actions
+  
+  // Dynamically import slash
+  const { default: slash } = await import('slash');
+  const defaultTemplate = path.resolve(__dirname, "src/templates/default.tsx");
 
-  return new Promise((resolve, reject) => {
-    // Query for markdown nodes to use in creating pages.
-    graphql(`
-      query {
-        site {
-          siteMetadata {
+  // Update GraphQL query syntax for Gatsby v5
+  const result = await graphql(`
+    {
+      allMdx {
+        edges {
+          node {
+            id
+            fields {
+              slug
+            }
+            frontmatter {
             title
-            menuLinks {
-              name
-              link
-              ignoreNextPrev
+            }
+            internal {
+              contentFilePath
             }
           }
-        }
-        allMdx(
-          sort: { order: ASC, fields: [fields___slug] }
-          limit: 10000
-          filter: { fileAbsolutePath: { ne: null } }
-        ) {
-          edges {
-            node {
+          next {
+            fields {
+              slug
+            }
+            frontmatter {
+              title
+            }
+          }
+          previous {
               fields {
                 slug
               }
@@ -65,73 +113,80 @@ exports.createPages = ({ graphql, actions, reporter }) => {
           }
         }
       }
-    `).then((result) => {
+  `);
+
       if (result.errors) {
-        return reject(result.errors)
-      }
-      const allPages = result.data.allMdx.edges;
-      const links = result.data.site.siteMetadata.menuLinks;
-      allPages.forEach(({ node }) => {
+    reporter.panicOnBuild('Error loading MDX result', result.errors);
+    return;
+  }
+
+  // Create pages from MDX files
+  const allPages = result.data?.allMdx?.edges || [];
+  const links = result.data?.site?.siteMetadata?.menuLinks || [];
+  
+  allPages.forEach(({ node, next, previous }) => {
         const slug = _.get(node, `fields.slug`);
         if (!slug) return;
-        const docIndex = links.findIndex(findDoc, {
-          link: slug
-        });
+    
+    const docIndex = links.findIndex(findDoc, { link: slug });
         let nextAndPrev = {}
+    
         if (docIndex > -1) {
           nextAndPrev.prev = links[docIndex - 1] || null;
           nextAndPrev.next = links[docIndex + 1] || null;
         }
+    
         if (nextAndPrev.prev && nextAndPrev.prev.ignoreNextPrev) {
           delete nextAndPrev.prev;
         }
         if (nextAndPrev.next && nextAndPrev.next.ignoreNextPrev) {
           delete nextAndPrev.next;
         }
+    
         createPage({
-          path: `${node.fields.slug}`, // required
+      path: `${node.fields.slug}`,
           component: slash(defaultTemplate),
           context: {
+        id: node.id,
             slug: node.fields.slug,
-            ...nextAndPrev,
+        next: next,
+        prev: previous,
           },
         });
       });
-      resolve();
-    });
-  })
-
 };
 
-// Create slugs for files, set released status for blog posts.
-exports.onCreateNode = ({ node, actions, getNode, reporter }) => {
-  const { createNodeField } = actions
-  const isMarkdown = [`MarkdownRemark`, `Mdx`].includes(node.internal.type) && getNode(node.parent).internal.type === `File`
-  const isTypescriptJSX = node.extension === "tsx" && node.internal.type === "File"
-
-  if (isTypescriptJSX) {
-    const parsedFilePath = path.parse(node.relativePath)
-    if (parsedFilePath.name !== `index` && parsedFilePath.dir !== ``) {
-      slug = `/${parsedFilePath.dir}/${parsedFilePath.name}`
-    } else if (parsedFilePath.dir === ``) {
-      slug = `/${parsedFilePath.name}`
-    } else {
-      slug = `/${parsedFilePath.dir}`
-    }
-    if (slug) {
-      return createNodeField({ node, name: `slug`, value: slug })
-    }
+// Create slugs for files
+exports.onCreateNode = async ({ node, getNode, actions }) => {
+  const { createNodeField } = actions;
+  
+  if (node.internal.type === `Mdx`) {
+    // Dynamically import slash
+    const { default: slash } = await import('slash');
+    
+    const fileNode = getNode(node.parent);
+    if (!fileNode) return;
+    
+    const parsedFilePath = path.parse(fileNode.relativePath || '');
+    
+    // Use slash to normalize paths
+    const slug = slash(`/${parsedFilePath.dir}/${parsedFilePath.name}/`);
+    
+    createNodeField({
+      node,
+      name: `slug`,
+      value: slug,
+    });
   }
-  if (isMarkdown) {
-    const parsedFilePath = path.parse(node.fileAbsolutePath)
-    if (parsedFilePath.name !== `index` && parsedFilePath.dir !== ``) {
-      slug = `/${parsedFilePath.name}`
-    } else {
-      slug = `/${parsedFilePath.name}`
-    }
+};
 
-    return createNodeField({ node, name: `slug`, value: slug });
-  }
-
-  return null;
+// Support for webpack ESM modules
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      fallback: {
+        // Add any polyfills needed for Node.js modules
+      },
+    },
+  })
 }

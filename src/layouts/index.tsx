@@ -1,49 +1,41 @@
-import React, { useState } from "react";
-import { MuiThemeProvider, AppBar, Toolbar, Typography, IconButton, Tooltip, CssBaseline, Grid, Table, TableRow, TableBody, TableCell, TableHead, Link, Divider, Container, Hidden } from "@material-ui/core"; //tslint:disable-line
-import useDarkMode from "use-dark-mode";
-import Brightness3Icon from "@material-ui/icons/Brightness3";
-import MenuIcon from "@material-ui/icons/Menu";
-import WbSunnyIcon from "@material-ui/icons/WbSunny";
-import { lightTheme, darkTheme } from "../themes/default";
-import { MDXProvider } from "@mdx-js/react";
-import CodeBlock from "../components/CodeBlock";
-import { useStaticQuery, graphql, Link as GatsbyLink } from "gatsby";
-import Sidebar from "../components/Sidebar";
-import "./index.css";
-import { ReusableProvider } from "reusable";
-import Footer from "../components/Footer";
-import { useTheme } from "@material-ui/styles";
+import React, { useState, ReactNode } from 'react';
+import { useStaticQuery, graphql, Link } from 'gatsby';
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  ThemeProvider,
+  Divider,
+  Tooltip,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import WbSunnyIcon from '@mui/icons-material/WbSunny'; // Sun icon (original)
+import Brightness3Icon from '@mui/icons-material/Brightness3'; // Moon icon (original)
+import { lightTheme, darkTheme } from '../themes/default';
+// import Footer from "../components/Footer";
 
-const Layout: React.FC = ({ children }) => {
-  const darkMode = useDarkMode();
-  const theme = darkMode.value ? darkTheme : lightTheme;
-  const components = {
-    h1: (props: any) => <Typography variant={"h1"} {...props} gutterBottom={true} />,
-    h2: (props: any) => <Typography variant={"h2"} {...props} gutterBottom={true} />,
-    h3: (props: any) => <Typography variant={"h3"} {...props} gutterBottom={true} />,
-    h4: (props: any) => <Typography variant={"h4"} {...props} gutterBottom={true} />,
-    h5: (props: any) => <Typography variant={"h5"} {...props} gutterBottom={true} />,
-    h6: (props: any) => <Typography variant={"h6"} {...props} gutterBottom={true} />,
-    Demo: (props: any) => <h1>This is a demo component</h1>,
-    code: (props: any) => <CodeBlock darkMode={darkMode.value} {...props} />,
-    thematicBreak: (props: any) => <Divider  {...props} />,
-    a: (props: any) => <Link {...props} />,
-    table: (props: any) => <Table {...props} style={{ marginBottom: "15px", ...props.style }} />,
-    thead: (props: any) => <TableHead {...props} />,
-    tr: (props: any) => <TableRow {...props} />,
-    tableBody: (props: any) => <TableBody {...props} />,
-    td: (props: any) => {
-      return (
-        <TableCell>
-          {props.children || ""}
-        </TableCell>
-      );
-    },
-  };
-  const [open, setOpen] = useState();
+export interface LayoutProps {
+  children: ReactNode;
+  location?: Location;
+}
+
+const Layout = ({ children, location }: LayoutProps) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Default to closed
+  const [darkMode, setDarkMode] = useState(false);
+  const theme = darkMode ? darkTheme : lightTheme;
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const data = useStaticQuery(graphql`
-    query LayoutQuery {
+    query MainLayoutSiteMetadata {
       site {
         siteMetadata {
           title
@@ -53,6 +45,10 @@ const Layout: React.FC = ({ children }) => {
           primaryColorDark
           secondaryColor
           secondaryColorDark
+          menuLinks {
+            name
+            link
+          }
           footerLinks {
             name
             link
@@ -62,64 +58,182 @@ const Layout: React.FC = ({ children }) => {
     }
   `);
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const drawer = (
+    <Box sx={{ p: 2 }}>
+      {data.site.siteMetadata.logoUrl && (
+        <Box sx={{ textAlign: 'center', mb: 2 }}>
+          <img
+            src={data.site.siteMetadata.logoUrl}
+            alt={data.site.siteMetadata.title}
+            style={{ maxWidth: '100%', maxHeight: '60px' }}
+          />
+        </Box>
+      )}
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        {data.site.siteMetadata.title}
+      </Typography>
+      <Divider sx={{ mb: 2 }} />
+      <List>
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {data.site.siteMetadata.menuLinks.map((link: any) => (
+          <ListItem
+            key={link.name}
+            component={Link}
+            to={link.link}
+            sx={{
+              color: 'text.primary',
+              textDecoration: 'none',
+              bgcolor: location?.pathname === link.link ? 'action.selected' : 'transparent',
+              '&:hover': {
+                bgcolor: 'action.hover',
+              },
+            }}
+          >
+            <ListItemText primary={link.name} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
-    <MDXProvider components={components}>
-      <MuiThemeProvider theme={{
-        ...theme,
-        palette: {
-          ...theme.palette,
-          primary: {
-            ...theme.palette.primary,
-            main: darkMode.value ? data.site.siteMetadata.primaryColorDark : data.site.siteMetadata.primaryColor,
-          },
-          secondary: {
-            ...theme.palette.secondary,
-            main: darkMode.value ? data.site.siteMetadata.secondaryColorDark : data.site.siteMetadata.secondaryColor,
-          },
-        },
-      }}>
-        <CssBaseline />
-        <Sidebar open={open} onClose={() => setOpen(false)} />
-        <AppBar position="fixed" color="default" elevation={0}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <AppBar
+          position="sticky"
+          sx={{
+            bgcolor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+            boxShadow: 0,
+            zIndex: (theme) => theme.zIndex.appBar,
+          }}
+        >
           <Toolbar>
-            <IconButton onClick={() => setOpen(true)}>
-              <MenuIcon fontSize="small" />
+            {/* Mobile menu toggle */}
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { md: 'none' } }}
+            >
+              <MenuIcon />
             </IconButton>
-            <Grid container alignContent="center" alignItems="center" justify="space-between">
-              <Grid item container direction="row" xs={5}>
-                <Grid style={{ paddingRight: "5px" }}>
-                  <img
-                    alt="logo"
-                    height="30"
-                    style={{
-                      marginTop: "6px",
-                    }}
-                    src={data.site.siteMetadata.logoUrl} />
-                </Grid>
-                <Grid style={{ marginTop: "7px" }}>
-                  <GatsbyLink to="/" style={{ textDecoration: "none" }}>
-                    <Typography color="textSecondary" variant="h6">
-                      {data.site.siteMetadata.title}
-                    </Typography>
-                  </GatsbyLink>
-                </Grid>
-              </Grid>
-              <Grid item container direction="row" xs={7} justify="flex-end" alignItems="center">
-                <Tooltip title={"Toggle Dark Mode"}>
-                  <IconButton onClick={darkMode.toggle}>
-                    {darkMode.value ? <Brightness3Icon fontSize="small" /> : <WbSunnyIcon fontSize="small" />}
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid>
+
+            {/* Desktop sidebar toggle - also using MenuIcon */}
+            {!isMobile && (
+              <IconButton
+                color="inherit"
+                aria-label={sidebarOpen ? 'close sidebar' : 'open sidebar'}
+                edge="start"
+                onClick={toggleSidebar}
+                sx={{ mr: 2 }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              sx={{
+                color: 'inherit',
+                textDecoration: 'none',
+                flexGrow: 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              {data.site.siteMetadata.logoUrl && (
+                <img src={data.site.siteMetadata.logoUrl} alt="" style={{ height: 30 }} />
+              )}
+              {data.site.siteMetadata.title}
+            </Typography>
+
+            {/* Light/Dark mode toggle */}
+            <Tooltip title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}>
+              <IconButton
+                onClick={toggleDarkMode}
+                color="inherit"
+                sx={{ ml: 1 }}
+                aria-label="toggle dark/light mode"
+              >
+                {darkMode ? <WbSunnyIcon /> : <Brightness3Icon />}
+              </IconButton>
+            </Tooltip>
           </Toolbar>
         </AppBar>
-        <div style={{ paddingTop: "64px" }}>
-          {children}
-          {/* <Footer footerLinks={data.site.siteMetadata.footerLinks} /> */}
-        </div>
-      </MuiThemeProvider >
-    </MDXProvider >
+
+        <Box sx={{ display: 'flex', flex: 1 }}>
+          {/* Sidebar for desktop */}
+          {!isMobile && (
+            <Drawer
+              variant="temporary"
+              open={sidebarOpen}
+              onClose={toggleSidebar}
+              ModalProps={{
+                keepMounted: true, // Better open performance
+              }}
+              hideBackdrop={false} // Show backdrop overlay
+              sx={{
+                '& .MuiDrawer-paper': {
+                  width: 240,
+                  boxSizing: 'border-box',
+                  borderRight: `1px solid ${theme.palette.divider}`,
+                  zIndex: (theme) => theme.zIndex.drawer,
+                },
+              }}
+            >
+              {drawer}
+            </Drawer>
+          )}
+
+          {/* Mobile drawer */}
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile
+            }}
+            sx={{
+              display: { xs: 'block', md: 'none' },
+              '& .MuiDrawer-paper': { width: 240 },
+            }}
+          >
+            {drawer}
+          </Drawer>
+
+          {/* Main content */}
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 0,
+              width: '100%',
+            }}
+          >
+            <Toolbar sx={{ display: { md: 'none' } }} />
+            {children}
+          </Box>
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 };
 

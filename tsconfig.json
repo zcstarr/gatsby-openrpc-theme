@@ -1,25 +1,44 @@
 {
     "compilerOptions": {
-      "target": "es5",
-      "module": "esnext",
+      "target": "es2020",
+      "module": "commonjs",
       "lib": [
-        "es2015",
-        "dom"
+        "dom",
+        "es2020"
       ],
-      "outDir": "./build",
+      "jsx": "react",
+      "declaration": true,
+      "declarationMap": true,
+      "sourceMap": true,
+      "outDir": "./dist",
+      "rootDir": "./",
       "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictPropertyInitialization": true,
+      "noImplicitThis": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "moduleResolution": "node",
+      "baseUrl": "./",
+      "paths": {},
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "allowSyntheticDefaultImports": true,
-      "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "noEmit": true,
-      "jsx": "preserve",
-      "allowJs": true
+      "forceConsistentCasingInFileNames": true
     },
     "include": [
-      "src"
+      "src/**/*",
+      "index.ts",
+      "gatsby-*.js"
+    ],
+    "exclude": [
+      "node_modules",
+      "public",
+      ".cache",
+      "dist",
+      "example"
     ]
   }
