@@ -1,104 +1,58 @@
-import React from 'react';
-import { Link } from 'gatsby';
-import { Box, Button, Grid, Typography, useTheme } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import React from "react";
+import { Grid, Box, Link, Typography, Paper, Button } from "@material-ui/core";
+import { Link as GatsbyLink } from "gatsby";
+import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIos from "@material-ui/icons/ArrowForwardIos";
 
-export interface NextAndPrevProps {
+interface IProps {
   next?: {
-    fields: {
-      slug: string;
-    };
-    frontmatter: {
-      title: string;
-    };
+    name: string;
+    link: string;
   };
   prev?: {
-    fields: {
-      slug: string;
-    };
-    frontmatter: {
-      title: string;
-    };
+    name: string;
+    link: string;
   };
 }
 
-const NextAndPrev: React.FC<NextAndPrevProps> = ({ next, prev }) => {
-  const theme = useTheme();
-  const isDarkMode = theme.palette.mode === 'dark';
+const styles = {
+  nextPrev: {
+    padding: "20px 40px",
+  },
+};
 
-  if (!next && !prev) {
-    return null;
-  }
-
+const NextAndPrev: React.FC<IProps> = (props) => {
   return (
-    <Box
-      sx={{
-        mt: 6,
-        pt: 2,
-        borderTop: 1,
-        borderColor: 'divider',
-      }}
-    >
-      <Grid container spacing={2} justifyContent="space-between">
-        <Grid item xs={12} sm={6}>
-          {prev && (
-            <Button
-              component={Link}
-              to={prev.fields.slug}
-              startIcon={<ArrowBackIcon />}
-              variant="outlined"
-              color="primary"
-              sx={{
-                textAlign: 'left',
-                justifyContent: 'flex-start',
-                width: '100%',
-                height: '100%',
-                p: 2,
-                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)',
-              }}
-            >
-              <Box>
-                <Typography variant="caption" display="block" color="text.secondary">
-                  Previous
-                </Typography>
-                <Typography variant="body2" noWrap>
-                  {prev.frontmatter.title}
-                </Typography>
-              </Box>
-            </Button>
-          )}
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          {next && (
-            <Button
-              component={Link}
-              to={next.fields.slug}
-              endIcon={<ArrowForwardIcon />}
-              variant="outlined"
-              color="primary"
-              sx={{
-                textAlign: 'right',
-                justifyContent: 'flex-end',
-                width: '100%',
-                height: '100%',
-                p: 2,
-                backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)',
-              }}
-            >
-              <Box>
-                <Typography variant="caption" display="block" color="text.secondary">
-                  Next
-                </Typography>
-                <Typography variant="body2" noWrap>
-                  {next.frontmatter.title}
-                </Typography>
-              </Box>
-            </Button>
-          )}
-        </Grid>
-      </Grid>
-    </Box>
+    <Grid container justify="space-between" style={{paddingTop: "40px", paddingBottom: "40px"}}>
+      <Box style={{ visibility: props.prev ? "visible" : "hidden" }}>
+        <Typography gutterBottom>Previous</Typography>
+        {props.prev &&
+          <>
+            <Link component={(p: { children: any }) => (
+              <GatsbyLink to={props.prev!.link} style={{ textDecoration: "none" }}>
+                {p.children}
+              </GatsbyLink>
+            )}>
+              <Button startIcon={<ArrowBackIos />}>{props.prev.name}</Button>
+            </Link>
+          </>
+        }
+      </Box>
+      <Box style={{ visibility: props.next ? "visible" : "hidden" }}>
+        <Typography gutterBottom style={{textAlign: "right"}}>Next</Typography>
+        {props.next &&
+          <>
+            <Link component={(p: { children: any }) => (
+              <GatsbyLink to={props.next!.link} style={{ textDecoration: "none" }}>
+                {p.children}
+              </GatsbyLink>
+            )}>
+              <Button endIcon={<ArrowForwardIos />}>{props.next.name}</Button>
+            </Link>
+          </>
+        }
+      </Box>
+    </Grid>
   );
 };
 

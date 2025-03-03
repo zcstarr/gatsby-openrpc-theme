@@ -1,152 +1,133 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
-
-const lightBackground = '#fff';
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import grey from "@material-ui/core/colors/grey";
+const lightBackground = "#fff";
 const darkBackground = grey[900];
 
 const headerFontWeight = 400;
 
-// Common typography settings to maintain consistency
-const typographySettings = {
+const typography = {
   h1: {
-    fontSize: '2.25rem',
+    fontSize: "2.25rem",
     fontWeight: headerFontWeight,
   },
   h2: {
-    fontSize: '2rem',
-    letterSpacing: '0',
+    fontSize: "2rem",
+    letterSpacing: "0",
     fontWeight: headerFontWeight,
   },
   h3: {
-    fontSize: '1.75rem',
+    fontSize: "1.75rem",
     fontWeight: headerFontWeight,
   },
   h4: {
-    fontSize: '1.5rem',
+    fontSize: "1.5rem",
     fontWeight: headerFontWeight,
   },
   h5: {
-    fontSize: '1.25rem',
+    fontSize: "1.25rem",
     fontWeight: headerFontWeight,
   },
   h6: {
-    fontSize: '1.1rem',
+    fontSize: "1.1rem",
     fontWeight: headerFontWeight,
   },
   body1: {
-    fontSize: '1.06rem',
+    fontSize: "1.06rem",
   },
-  fontFamily: ['Helvetica', 'Arial', 'San-Serif'].join(','),
   fontSize: 17,
   fontWeightRegular: 250,
+  fontFamily: ["Helvetica", "Arial", "San-Serif"].join(","),
 };
 
-// Light theme with preserved styling
-export const lightTheme = responsiveFontSizes(
-  createTheme({
-    palette: {
-      mode: 'light',
-      background: {
-        default: lightBackground,
-        paper: lightBackground,
+export const lightTheme = responsiveFontSizes(createMuiTheme({
+  props: {
+    MuiAppBar: {
+      position: "sticky",
+    },
+    MuiCard: {
+      elevation: 0,
+    },
+  },
+  overrides: {
+    MuiPaper: {
+      root: {
+        zIndex: 1,
+        opacity: 1,
       },
     },
-    typography: typographySettings,
-    components: {
-      MuiAppBar: {
-        defaultProps: {
-          position: 'sticky',
-        },
-        styleOverrides: {
-          root: {
-            backgroundColor: lightBackground,
-          },
-          colorDefault: {
-            backgroundColor: lightBackground,
-          },
-          colorPrimary: {
-            backgroundColor: lightBackground,
-          },
-        },
-      },
-      MuiCard: {
-        defaultProps: {
-          elevation: 0,
-        },
-      },
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            zIndex: 1,
-            opacity: 1,
-          },
-        },
-      },
-      MuiToolbar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: lightBackground,
-          },
-        },
+    MuiToolbar: {
+      root: {
+        backgroundColor: lightBackground,
       },
     },
-  })
-);
+    MuiAppBar: {
+      root: {
+        backgroundColor: lightBackground,
+      },
+      colorDefault: {
+        backgroundColor: lightBackground,
+      },
+      colorPrimary: {
+        backgroundColor: lightBackground,
+      },
+    },
+  },
+  palette: {
+    background: {
+      default: "#fff",
+    },
+  },
+  typography,
+}));
 
-// Dark theme with preserved styling
-export const darkTheme = responsiveFontSizes(
-  createTheme({
-    palette: {
-      mode: 'dark',
-      background: {
-        default: darkBackground,
-        paper: darkBackground,
+export const darkTheme = responsiveFontSizes(createMuiTheme({
+  props: {
+    MuiAppBar: {
+      position: "sticky",
+    },
+  },
+  palette: {
+    type: "dark",
+    background: {
+      default: grey[900],
+      paper: grey[900],
+    },
+  },
+  overrides: {
+    MuiPaper: {
+      root: {
+        zIndex: 1,
+        opacity: 1,
       },
     },
-    typography: typographySettings,
-    components: {
-      MuiAppBar: {
-        defaultProps: {
-          position: 'sticky',
-        },
-        styleOverrides: {
-          root: {
-            backgroundColor: darkBackground,
-          },
-          colorPrimary: {
-            backgroundColor: darkBackground,
-          },
-        },
+    MuiAppBar: {
+      root: {
+        backgroundColor: darkBackground,
       },
-      MuiToolbar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: darkBackground,
-          },
-        },
-      },
-      MuiTable: {
-        styleOverrides: {
-          root: {
-            backgroundColor: darkBackground,
-          },
-        },
-      },
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            zIndex: 1,
-            opacity: 1,
-          },
-        },
-      },
-      MuiTypography: {
-        styleOverrides: {
-          root: {
-            color: grey[400],
-          },
-        },
+      colorPrimary: {
+        backgroundColor: darkBackground,
       },
     },
-  })
-);
+    MuiToolbar: {
+      root: {
+        backgroundColor: darkBackground,
+      },
+    },
+    MuiTable: {
+      root: {
+        backgroundColor: darkBackground,
+      },
+    },
+    MuiTypography: {
+      root: {
+        color: grey[400],
+      },
+    },
+  },
+  typography,
+}));
+
+export default {
+  darkTheme,
+  lightTheme,
+};

@@ -1,97 +1,29 @@
-import React from 'react';
-import { Box, Container, Typography, Link, useTheme } from '@mui/material';
+import React from "react";
+import { Link, Grid, Typography, useMediaQuery, Theme } from "@material-ui/core";
+import { Link as GatsbyLink } from "gatsby";
+import { useTheme } from "@material-ui/styles";
 
-export interface FooterProps {
-  footerLinks?: Array<{
-    name: string;
-    link: string;
-  }>;
-  copyrightText?: string;
-  copyrightYear?: number;
-  organizationName?: string;
-  organizationUrl?: string;
-  builtWithText?: string;
-  builtWithName?: string;
-  builtWithUrl?: string;
+interface IFooterLink {
+  name: string;
+  link: string;
 }
 
-const Footer = ({
-  footerLinks = [],
-  copyrightYear = new Date().getFullYear(),
-  copyrightText = '©',
-  organizationName = 'OpenRPC',
-  organizationUrl = 'https://open-rpc.org/',
-  builtWithText = 'Documentation built with',
-  builtWithName = 'Gatsby',
-  builtWithUrl = 'https://www.gatsbyjs.com/',
-}: FooterProps) => {
-  const theme = useTheme();
-  const isDarkMode = theme.palette.mode === 'dark';
+interface IProps {
+  footerLinks: IFooterLink[];
+}
+
+const Footer: React.FC<IProps> = (props) => {
+  const theme: Theme = useTheme();
+  const smallQuery = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
-    <Box
-      component="footer"
-      sx={{
-        py: 3,
-        px: 2,
-        mt: 'auto',
-        backgroundColor: isDarkMode ? theme.palette.grey[900] : theme.palette.grey[200],
-      }}
-    >
-      <Container maxWidth="sm">
-        {footerLinks.length > 0 && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', mb: 2 }}>
-            {footerLinks.map((link, index) => (
-              <React.Fragment key={link.name}>
-                <Link
-                  href={link.link}
-                  color="inherit"
-                  sx={{
-                    mx: 1,
-                    color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.dark,
-                  }}
-                >
-                  {link.name}
-                </Link>
-                {index < footerLinks.length - 1 && (
-                  <Typography
-                    component="span"
-                    color={isDarkMode ? 'text.secondary' : 'text.primary'}
-                    sx={{ mx: 0.5 }}
-                  >
-                    •
-                  </Typography>
-                )}
-              </React.Fragment>
-            ))}
-          </Box>
-        )}
-        <Typography variant="body2" color="text.secondary" align="center">
-          {copyrightText} {copyrightYear}{' '}
-          <Link
-            color="inherit"
-            href={organizationUrl}
-            sx={{
-              color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.dark,
-            }}
-          >
-            {organizationName}
-          </Link>
-        </Typography>
-        <Typography variant="body2" color="text.secondary" align="center">
-          {builtWithText}{' '}
-          <Link
-            color="inherit"
-            href={builtWithUrl}
-            sx={{
-              color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.dark,
-            }}
-          >
-            {builtWithName}
-          </Link>
-        </Typography>
-      </Container>
-    </Box>
+    <Grid container spacing={10} style={{marginTop: "10px", marginBottom: "10px", padding: smallQuery ? "" : "30px"}} direction={smallQuery ? "row" : "column"}>
+      {props.footerLinks.map((footerLink) => {
+        return (
+          <Link href={footerLink.link} style={{paddingRight: "15px", fontSize: "16px"}} color="textSecondary">{footerLink.name}</Link>
+        );
+      })}
+    </Grid>
   );
 };
 

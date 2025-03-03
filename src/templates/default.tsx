@@ -1,85 +1,44 @@
-import React from 'react';
-import { graphql, Link } from 'gatsby';
-import { MDXProvider } from '@mdx-js/react';
-import { Typography, Box, Paper, Divider } from '@mui/material';
-import NextAndPrev from '../components/NextAndPrev';
+import React, { useState, useEffect } from "react";
+import { graphql } from "gatsby";
+import useDarkMode from "use-dark-mode";
+import { MDXRenderer } from "gatsby-plugin-mdx";
+import { lightTheme, darkTheme } from "../themes/default";
+import Layout from "../layouts";
+import NextAndPrev from "../components/NextAndPrev";
 
-// Define components for MDX
-const components = {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  h1: (props: any) => <Typography variant="h1" {...props} />,
-  h2: (props: any) => <Typography variant="h2" {...props} />,
-  h3: (props: any) => <Typography variant="h3" {...props} />,
-  h4: (props: any) => <Typography variant="h4" {...props} />,
-  h5: (props: any) => <Typography variant="h5" {...props} />,
-  h6: (props: any) => <Typography variant="h6" {...props} />,
-  p: (props: any) => <Typography paragraph {...props} />,
-  a: (props: any) => <Link {...props} />,
-  pre: (props: any) => (
-    <Box
-      component="pre"
-      sx={{ overflowX: 'auto', p: 2, bgcolor: 'background.paper', borderRadius: 1, mb: 2 }}
-      {...props}
-    />
-  ),
-  code: (props: any) => (
-    <Box component="code" sx={{ fontFamily: 'monospace', p: 0.5, borderRadius: 0.5 }} {...props} />
-  ),
-  // Add more component mappings as needed
-};
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
-interface DefaultTemplateProps {
-  data: {
-    mdx: {
-      frontmatter: {
-        title: string;
-      };
-      body: string;
-    };
-  };
-  children: React.ReactNode;
+interface IProps {
   pageContext: {
     slug: string;
-    next?: {
-      fields: {
-        slug: string;
-      };
-      frontmatter: {
-        title: string;
-      };
-    };
-    prev?: {
-      fields: {
-        slug: string;
-      };
-      frontmatter: {
-        title: string;
-      };
-    };
+    next: any;
+    prev: any;
   };
+  data: any;
 }
 
-const DefaultTemplate = ({ children, pageContext }: DefaultTemplateProps) => {
+const DefaultTemplate: React.FC<IProps> = ({ children, pageContext, data }) => {
+  const page = data.mdx;
+
   return (
     <>
-      <Paper elevation={0} sx={{ p: 3, mb: 4 }}>
-        <Divider sx={{ mb: 3 }} />
-        <MDXProvider components={components}>{children}</MDXProvider>
-        <NextAndPrev next={pageContext.next} prev={pageContext.prev} />
-      </Paper>
+      <MDXRenderer slug={page.fields.slug}>{page.body}</MDXRenderer>
+      <NextAndPrev prev={pageContext.prev} next={pageContext.next} />
     </>
   );
 };
 
+export default DefaultTemplate;
+
 export const pageQuery = graphql`
-  query ($slug: String!) {
-    mdx(fields: { slug: { eq: $slug } }) {
+  query($path: String!) {
+    mdx(fields: { slug: { eq: $path } }) {
+      body
+      excerpt
+      fields {
+        slug
+      }
       frontmatter {
         title
       }
     }
   }
 `;
-
-export default DefaultTemplate;
