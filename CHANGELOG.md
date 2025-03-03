@@ -1,3 +1,48 @@
+# 1.0.0 (2025-03-03)
+
+
+### Bug Fixes
+
+* add footer + add styles ([00a6529](https://github.com/zcstarr/gatsby-openrpc-theme/commit/00a6529d5f22bfbabc13de7157025df7f59a3187))
+* add openrpc theme ([cd24bbb](https://github.com/zcstarr/gatsby-openrpc-theme/commit/cd24bbb8a26c0b2391a32d451ee8927494797f7d))
+* add primary/secondary color config ([b310be2](https://github.com/zcstarr/gatsby-openrpc-theme/commit/b310be2618fafffaa02bc760ae11d7e43ac005fd))
+* add reusable provider wrapper ([df049d9](https://github.com/zcstarr/gatsby-openrpc-theme/commit/df049d904e70669ac1a1e4db1845e238215f1182))
+* build needs node version >=10.18, updating to 12x stable ([42f0dd8](https://github.com/zcstarr/gatsby-openrpc-theme/commit/42f0dd8357eed8445ac075160451cd43e80fba55))
+* bump node version in circleci ([2419f2a](https://github.com/zcstarr/gatsby-openrpc-theme/commit/2419f2a8f2b21a487c651fee8f096ffe615a2394))
+* changed default body font size to 17px ([d872a0f](https://github.com/zcstarr/gatsby-openrpc-theme/commit/d872a0fff7f2e97a63d1992a34c93de06630ed84))
+* ci .circleci/config.yml and package.json ([133f8ba](https://github.com/zcstarr/gatsby-openrpc-theme/commit/133f8ba2f1a163385235e81a32c5835c2b33d148))
+* **CI:** remove gh-pages release step ([1a31557](https://github.com/zcstarr/gatsby-openrpc-theme/commit/1a315579ef8c935f940e79b047ebf2700f8dc18d))
+* **CI:** remove unneeded CI steps ([f2da3e1](https://github.com/zcstarr/gatsby-openrpc-theme/commit/f2da3e1c2795ce57701f85ed82e0ba00a8ef48c8))
+* document title setting ([166085e](https://github.com/zcstarr/gatsby-openrpc-theme/commit/166085eb20536eaca4158239073a6e4e02789470))
+* hide search on mobile ([85e29d8](https://github.com/zcstarr/gatsby-openrpc-theme/commit/85e29d8eebd8739f3b8c3e9b8c8f3516be360832))
+* icon sizes ([deae20e](https://github.com/zcstarr/gatsby-openrpc-theme/commit/deae20e2015ecd286b01e72d1d0709ec52d845eb))
+* naming + remove unused plugins ([4079632](https://github.com/zcstarr/gatsby-openrpc-theme/commit/40796328690aa8d1c7dec638848d6fb933fb9f48))
+* node docker container no more rust ([687c881](https://github.com/zcstarr/gatsby-openrpc-theme/commit/687c8816f7d2ac4bcdc4096e20bf3210f40be975))
+* package name ([c6dedbc](https://github.com/zcstarr/gatsby-openrpc-theme/commit/c6dedbca34da8931b20e3a6191c41ae4021da431))
+* **package.json:** public publish ([81e75ac](https://github.com/zcstarr/gatsby-openrpc-theme/commit/81e75ac4a905bc7a771529a4bb78b837d3d63d0b))
+* **package.json:** repository + bugs url ([b1cc57a](https://github.com/zcstarr/gatsby-openrpc-theme/commit/b1cc57a0f33d5853d1b9cf33f62533a8986192d1))
+* **README:** add install and usage instructions ([3ca639e](https://github.com/zcstarr/gatsby-openrpc-theme/commit/3ca639ef1cd8dc6d87b16515d4fe516dda411494))
+* remove CI step ([3c67003](https://github.com/zcstarr/gatsby-openrpc-theme/commit/3c67003c0c57f1c0b73a4ef0d3f5be04c257c6a0))
+* remove console.log ([f7571e8](https://github.com/zcstarr/gatsby-openrpc-theme/commit/f7571e808295acae69be23e1d794df1ac06892da))
+* remove roboto ([0c50014](https://github.com/zcstarr/gatsby-openrpc-theme/commit/0c50014d17fc2de21755666e505e545daff6a6ec))
+* remove search ([e1da1be](https://github.com/zcstarr/gatsby-openrpc-theme/commit/e1da1be5811ba7f5c27c69da3e6e7752721a854c))
+* repository url ([decb9a4](https://github.com/zcstarr/gatsby-openrpc-theme/commit/decb9a4c3c58c537e85e368df4327719ae172d04))
+* update gatsby-sharp plugin ([3038542](https://github.com/zcstarr/gatsby-openrpc-theme/commit/30385428d3bd94ce38c01b8902f8e186b24d163a))
+
+
+### Features
+
+* add dark theme primary + secondary color configuration ([59a148c](https://github.com/zcstarr/gatsby-openrpc-theme/commit/59a148c83496933f8a43b0b57dd5060e9fa2a514))
+* add search ([be9c714](https://github.com/zcstarr/gatsby-openrpc-theme/commit/be9c714a6f3d465a9bebf87fed9217d30509ad16))
+* Initial Commit ([e6c22ff](https://github.com/zcstarr/gatsby-openrpc-theme/commit/e6c22ff461ec59d02f4819a56c09b249ef6cb576))
+* initial commit to refactor and update the theme ([4f46e16](https://github.com/zcstarr/gatsby-openrpc-theme/commit/4f46e16c8c575cbb0d4362a72d160537f4b44826))
+* modernize the theme with gatsby,react18+,material6, and new eslint ([a4c813f](https://github.com/zcstarr/gatsby-openrpc-theme/commit/a4c813f3285ff3465648907c2c5865a6743566fe))
+
+
+### BREAKING CHANGES
+
+* this involved several major version updates
+
 ## [1.2.1](https://github.com/xops/gatsby-openrpc-theme/compare/1.2.0...1.2.1) (2022-09-20)
 
 
