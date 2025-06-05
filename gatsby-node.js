@@ -169,8 +169,9 @@ exports.onCreateNode = async ({ node, getNode, actions }) => {
     
     const parsedFilePath = path.parse(fileNode.relativePath || '');
     
-    // Use slash to normalize paths
-    const slug = slash(`/${parsedFilePath.dir}/${parsedFilePath.name}/`);
+    // Use slash to normalize paths, handle empty dir case
+    const dirPath = parsedFilePath.dir ? `/${parsedFilePath.dir}` : '';
+    const slug = slash(`${dirPath}/${parsedFilePath.name}/`);
     
     createNodeField({
       node,
