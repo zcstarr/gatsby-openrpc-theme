@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql, Link } from 'gatsby';
 import { MDXProvider } from '@mdx-js/react';
-import { Typography, Box, Paper, Divider } from '@mui/material';
+import { Typography, Box, Paper } from '@mui/material';
 import NextAndPrev from '../components/NextAndPrev';
 
 // Define components for MDX
@@ -35,7 +35,6 @@ interface DefaultTemplateProps {
       frontmatter: {
         title: string;
       };
-      body: string;
     };
   };
   children: React.ReactNode;
@@ -64,7 +63,6 @@ const DefaultTemplate = ({ children, pageContext }: DefaultTemplateProps) => {
   return (
     <>
       <Paper elevation={0} sx={{ p: 3, mb: 4 }}>
-        <Divider sx={{ mb: 3 }} />
         <MDXProvider components={components}>{children}</MDXProvider>
         <NextAndPrev next={pageContext.next} prev={pageContext.prev} />
       </Paper>
