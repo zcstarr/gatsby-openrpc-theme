@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/zcstarr/gatsby-openrpc-theme/compare/1.0.1...1.0.2) (2025-06-05)
+
+
+### Bug Fixes
+
+* docs mdx rendering with v5 update ([f5283c2](https://github.com/zcstarr/gatsby-openrpc-theme/commit/f5283c2014ba0340c256cc7d0b8838e4382f8f15))
+
 ## [1.0.1](https://github.com/zcstarr/gatsby-openrpc-theme/compare/1.0.0...1.0.1) (2025-06-05)
 
 
