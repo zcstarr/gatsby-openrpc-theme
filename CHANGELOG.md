@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/zcstarr/gatsby-openrpc-theme/compare/1.0.0...1.0.1) (2025-06-05)
+
+
+### Bug Fixes
+
+* empty directories or directories without prefix on pages failed to render ([adedaaa](https://github.com/zcstarr/gatsby-openrpc-theme/commit/adedaaa9624257b800a465d439313b6490962f32))
+* rm sample.mdx causes docs folder rendering issues +  update config to use relpath ([d945e6b](https://github.com/zcstarr/gatsby-openrpc-theme/commit/d945e6be78e351a4b10ac678e4af29e01c9f9902))
+
 # 1.0.0 (2025-03-03)
 
 
